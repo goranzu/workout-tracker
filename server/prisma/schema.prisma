@@ -25,5 +25,6 @@ model Workout {
   updatedAt   DateTime   @updatedAt
   workoutType String
   duration    Float
+  /// @onDelete(CASCADE)
   exercises   Exercise[]
 }

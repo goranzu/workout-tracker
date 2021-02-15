@@ -15,7 +15,7 @@ CREATE TABLE "Exercise" (
     "name" TEXT NOT NULL,
     "sets" INTEGER,
     "repsPerSet" INTEGER,
-    "workoutId" INTEGER NOT NULL,
+    "workoutId" INTEGER,
     "distance" DECIMAL,
     FOREIGN KEY ("workoutId") REFERENCES "Workout" ("id") ON DELETE CASCADE
 );

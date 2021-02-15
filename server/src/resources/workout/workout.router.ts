@@ -11,7 +11,10 @@ const router = Router();
 
 router.route("/").get(
   async (req: Request, res: Response): Promise<void> => {
-    const workouts = await req.prisma.workout.findMany({ take: 10 });
+    const workouts = await req.prisma.workout.findMany({
+      take: 10,
+      include: { exercises: {} },
+    });
     res.status(200).json({ data: { workouts } });
     return;
   },
