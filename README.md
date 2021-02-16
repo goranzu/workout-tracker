@@ -1,3 +1,3 @@
 # workout-tracker
 
-Learn TS :)
+Learn TS + Next :)
