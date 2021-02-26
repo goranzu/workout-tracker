@@ -7,24 +7,37 @@ generator client {
   provider = "prisma-client-js"
 }
 
+model User {
+  id         String  @id @default(cuid())
+  username   String  @unique
+  password   String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  lastLogin  DateTime?
+  /// @onDelete(CASCADE)
+  workouts   Workout[]
+}
+
 model Exercise {
-  id         Int      @id @default(autoincrement())
+  id         String   @id @default(cuid())
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   name       String
   sets       Int?
   repsPerSet Int?
-  workoutId  Int
+  workoutId  String
   distance   Float?
   workout    Workout  @relation(fields: [workoutId], references: [id])
 }
 
 model Workout {
-  id          Int        @id @default(autoincrement())
+  id          String     @id @default(cuid())
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
   workoutType String
   duration    Float
+  userId      String?
+  user        User? @relation(fields: [userId], references: [id])
   /// @onDelete(CASCADE)
   exercises   Exercise[]
 }

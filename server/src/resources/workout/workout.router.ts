@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express";
-import { CustomRequest } from "../../types";
+// import { CustomRequest } from "../../types";
 
 const router = Router();
 
@@ -17,7 +17,7 @@ router.route("/").get(
     });
     res.status(200).json({ data: { workouts } });
     return;
-  },
+  }
 );
 // .post((req: CustomRequest<Workout>, res: Response): void => {
 //   const { type, date, duration, exercise } = req.body;
