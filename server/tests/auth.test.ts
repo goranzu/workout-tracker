@@ -2,7 +2,6 @@ import { PrismaClient } from "@prisma/client";
 import { PrismaDelete } from "@paljs/plugins";
 import supertest from "supertest";
 import { app } from "../src/server";
-import argon2 from "argon2";
 
 const BASE_URL = "/auth";
 
