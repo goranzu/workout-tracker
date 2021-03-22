@@ -1,13 +1,13 @@
 import express, { Response, NextFunction } from "express";
 import morgan from "morgan";
 import helmet from "helmet";
-import config from "./config";
 import workoutRouter from "./resources/workout/workout.router";
 import { PrismaClient } from "@prisma/client";
 import { CustomRequest } from "./types";
 import * as exceptions from "./exceptions";
 import * as middlewares from "./middlewares";
 import argon2 from "argon2";
+import baseConfig from "./config";
 
 const prisma = new PrismaClient();
 
@@ -66,8 +66,8 @@ app.use("/api/workouts", workoutRouter);
 app.use(middlewares.errorHandler);
 
 function start(): void {
-  app.listen(config.port, () => {
-    console.log(`Listening on http://localhost:${config.port}`);
+  app.listen(baseConfig.port, () => {
+    console.log(`Listening on http://localhost:${baseConfig.port}`);
   });
 }
 
