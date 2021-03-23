@@ -1,14 +1,11 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import baseConfig from "./config";
-import { UserInputException } from "./exceptions";
+import { BaseException } from "./exceptions";
 
-function errorHandler(
-  err: UserInputException,
-  req: Request,
-  res: Response,
-  _next: NextFunction
-): void {
+function errorHandler(err: BaseException, req: Request, res: Response): void {
   const statusCode = err.statusCode || 500;
+
+  console.log(err);
 
   res.status(statusCode).json({
     error: {
@@ -17,6 +14,7 @@ function errorHandler(
       path: req.originalUrl,
     },
   });
+  return;
 }
 
 export { errorHandler };
