@@ -15,9 +15,14 @@ function RegisterPage(): JSX.Element {
     <div>
       <h1>Register</h1>
       <form
-        onSubmit={(e) => {
+        onSubmit={async (e) => {
           e.preventDefault();
-          console.log(inputs);
+          const data = await fetch("/api/register", {
+            body: JSON.stringify(inputs),
+            method: "POST",
+          });
+          const user = await data.json();
+          console.log(user);
         }}
       >
         <fieldset>
