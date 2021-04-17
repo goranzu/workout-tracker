@@ -1,0 +1,33 @@
+.form {
+  padding: 1em;
+  border: 1px solid black;
+  width: 30rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.fieldset {
+  margin: 0;
+  padding: 0;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.fieldset > * + * {
+  margin-top: 1em;
+}
+
+.fieldset > * {
+  display: block;
+}
+
+.fieldset input {
+  display: block;
+  width: 20rem;
+}
+
+.fieldset button {
+  padding: 0.5em 2em;
+}

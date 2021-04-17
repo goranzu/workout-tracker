@@ -1,6 +1,7 @@
 import jwt, { SignOptions } from "jsonwebtoken";
 import path from "path";
 import fs from "fs";
+import { JwtPayload } from "../types";
 
 const pathToPubKey = path.join(process.cwd(), "id_rsa_pub.pem");
 const pathToPrivateKey = path.join(process.cwd(), "id_rsa_priv.pem");
@@ -11,27 +12,20 @@ const jwtOptions: SignOptions = {
   algorithm: "RS256",
   issuer: "api.track",
   audience: "api.track",
+  expiresIn: "1h",
 };
 
-interface Payload {
-  id: string;
-  username: string;
-  iat: number;
-  aud: string;
-  iss: string;
+function signToken({ id, username }: { id: string; username: string }): string {
+  return jwt.sign({ sub: id, username }, PRIV_KEY, jwtOptions);
 }
 
-function signToken({ id, username }: Pick<Payload, "id" | "username">): string {
-  return jwt.sign({ id, username }, PRIV_KEY, jwtOptions);
-}
-
-function verifyToken(token: string): Promise<Payload> {
+function verifyToken(token: string): Promise<JwtPayload> {
   return new Promise((resolve, reject) => {
     jwt.verify(token, PUB_KEY, jwtOptions, (err, payload) => {
       if (err) {
         reject(err);
       }
-      resolve(payload as Payload);
+      resolve(payload as JwtPayload);
     });
   });
 }

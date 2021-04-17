@@ -33,3 +33,12 @@ export interface Workout {
 export interface CustomRequest<T> extends Request {
   body: T;
 }
+
+export interface JwtPayload {
+  sub: string;
+  username: string;
+  iat: number;
+  exp: number;
+  aud: string;
+  iss: string;
+}

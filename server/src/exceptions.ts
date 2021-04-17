@@ -1,21 +1,13 @@
-class BaseException extends Error {
-  constructor(public statusCode: number) {
-    super();
+class UserInputException extends Error {
+  constructor(public message = "Invalid Input", public statusCode = 400) {
+    super(message);
   }
 }
 
-class UserInputException extends BaseException {
-  constructor(message = "Invalid Input") {
-    super(400);
-    this.message = message;
+class UnauthorizedException extends Error {
+  constructor(public message = "Unauthorized", public statusCode = 401) {
+    super(message);
   }
 }
 
-class UnauthorizedException extends BaseException {
-  constructor(message = "Unauthorized") {
-    super(401);
-    this.message = message;
-  }
-}
-
-export { UserInputException, UnauthorizedException, BaseException };
+export { UserInputException, UnauthorizedException };
