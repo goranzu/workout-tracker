@@ -1,62 +1,65 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { AuthResponse } from "../../types";
+import { useAxios } from "./AxiosContext";
 
 interface AuthContextState {
-  userInfo: { username: string } | null;
-  token: string | null;
-  expiresAt: number | null;
+  userInfo: { username: string } | null | Record<string, never>;
+  isAuthenticated: boolean;
 }
 
 interface AuthContextInterface {
   authState: AuthContextState;
   setAuthState: (info: AuthResponse) => void;
-  isAuthenticated: () => boolean;
-  logout: () => void;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextInterface>(
   {} as AuthContextInterface,
 );
 
-function AuthProvider({
-  children,
-}: {
+type AuthProviderProps = {
   children: React.ReactNode;
-}): JSX.Element {
-  const token = localStorage.getItem("token");
-  const expiresAt = localStorage.getItem("expiresAt");
-  const userInfo = localStorage.getItem("userInfo");
+};
 
-  const [authState, setAuthState] = useState({
-    token,
-    expiresAt: expiresAt ? Number(expiresAt) : null,
-    userInfo: userInfo ? JSON.parse(userInfo) : null,
+function AuthProvider({ children }: AuthProviderProps): JSX.Element {
+  const { appAxios } = useAxios();
+  const [authState, setAuthState] = useState<AuthContextState>({
+    userInfo: null,
+    isAuthenticated: false,
   });
 
+  useEffect(() => {
+    (async function getUser() {
+      try {
+        const { data } = await appAxios.get("/user", {
+          withCredentials: true,
+        });
+        setAuthState({
+          userInfo: data.data,
+          isAuthenticated: true,
+        });
+      } catch (error) {
+        // console.error(error);
+        setAuthState({ userInfo: {}, isAuthenticated: false });
+      }
+    })();
+  }, [appAxios]);
+
   function setAuthInfo(info: AuthResponse): void {
-    localStorage.setItem("token", info.token);
-    localStorage.setItem("expiresAt", String(info.expiresAt));
-    localStorage.setItem("userInfo", JSON.stringify(info.userInfo));
-    setAuthState(info);
+    setAuthState({ userInfo: info, isAuthenticated: !info.id });
   }
 
-  function isAuthenticated(): boolean {
-    if (!authState.expiresAt || !authState.token) {
-      return false;
+  async function logout() {
+    try {
+      await appAxios.delete("/logout");
+      // Set to empty object... not null or undefined
+      setAuthState({
+        userInfo: {},
+        isAuthenticated: false,
+      });
+    } catch (error) {
+      console.error(error);
     }
-
-    return new Date().getTime() / 1000 < authState.expiresAt;
-  }
-
-  function logout() {
-    localStorage.removeItem("token");
-    localStorage.removeItem("expiresAt");
-    localStorage.removeItem("userInfo");
-    setAuthState({
-      expiresAt: null,
-      token: null,
-      userInfo: null,
-    });
   }
 
   return (
@@ -64,7 +67,6 @@ function AuthProvider({
       value={{
         authState,
         setAuthState: (info) => setAuthInfo(info),
-        isAuthenticated,
         logout,
       }}
     >

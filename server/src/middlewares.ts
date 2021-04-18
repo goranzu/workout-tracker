@@ -1,5 +1,18 @@
 import { NextFunction, Request, Response } from "express";
 import baseConfig from "./config";
+import * as exceptions from "./exceptions";
+
+function protect(req: Request, res: Response, next: NextFunction) {
+  const { userId } = req.session;
+  try {
+    if (!userId) {
+      throw new exceptions.UnauthorizedException();
+    }
+    next();
+  } catch (error) {
+    next(error);
+  }
+}
 
 function errorHandler(
   err: Error & { statusCode?: number },
@@ -21,4 +34,4 @@ function errorHandler(
   return;
 }
 
-export { errorHandler };
+export { errorHandler, protect };

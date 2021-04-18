@@ -1,19 +1,19 @@
 import React, { useEffect } from "react";
-import { useAxios } from "../context/AxiosContex";
+import { useAxios } from "../context/AxiosContext";
 
 export default function DashboardPage(): JSX.Element {
-  const { authAxios } = useAxios();
+  const { appAxios } = useAxios();
 
   useEffect(() => {
-    (async () => {
-      try {
-        const { data } = await authAxios.get("/protect");
-        console.log(data);
-      } catch (error) {
-        console.error(error.response);
-      }
+    (async function getData() {
+      // try {
+      //   const { data } = await appAxios.get("/");
+      //   console.log(data);
+      // } catch (error) {
+      //   console.error(error.response);
+      // }
     })();
-  }, [authAxios]);
+  }, [appAxios]);
 
   return (
     <main>

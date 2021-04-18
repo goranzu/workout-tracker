@@ -3,7 +3,7 @@ import { Redirect } from "react-router";
 import { AuthAxiosResponse } from "../../types";
 import Form from "../components/form/Form";
 import { useAuth } from "../context/AuthContext";
-import { publicAxios } from "../lib/fetch";
+import { useAxios } from "../context/AxiosContext";
 import { useForm } from "../lib/useForm";
 
 export default function RegisterPage(): JSX.Element {
@@ -14,6 +14,7 @@ export default function RegisterPage(): JSX.Element {
   const [isLoading, setIsLoading] = useState(false);
   const [redirect, setRedirect] = useState(false);
   const { setAuthState } = useAuth();
+  const { appAxios } = useAxios();
 
   return (
     <>
@@ -31,7 +32,7 @@ export default function RegisterPage(): JSX.Element {
             }
             try {
               setIsLoading(true);
-              const { data } = await publicAxios.post<AuthAxiosResponse>(
+              const { data } = await appAxios.post<AuthAxiosResponse>(
                 "/register",
                 {
                   username,

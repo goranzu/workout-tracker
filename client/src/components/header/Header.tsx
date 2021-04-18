@@ -4,32 +4,27 @@ import { useAuth } from "../../context/AuthContext";
 import classes from "./header.module.css";
 
 export default function Header(): JSX.Element {
-  const { authState, isAuthenticated, logout } = useAuth();
+  const { authState, logout } = useAuth();
   const history = useHistory();
   return (
     <header className={classes.header}>
       <p>workout tracker</p>
-
       <div className={classes.right}>
-        {isAuthenticated() && <p>{authState.userInfo?.username}</p>}
+        {authState.isAuthenticated && <p>{authState.userInfo?.username}</p>}
         <nav>
-          {isAuthenticated() ? (
+          {authState.isAuthenticated ? (
             <Link to="/dashboard">Dashboard</Link>
           ) : (
             <>
-              <Link to={isAuthenticated() ? "/dashboard" : "/register"}>
-                Register
-              </Link>
-              <Link to={isAuthenticated() ? "/dashboard" : "/login"}>
-                Login
-              </Link>
+              <Link to={"/register"}>Register</Link>
+              <Link to={"/login"}>Login</Link>
             </>
           )}
         </nav>
-        {isAuthenticated() && (
+        {authState.isAuthenticated && (
           <button
-            onClick={() => {
-              logout();
+            onClick={async () => {
+              await logout();
               history.push("/login");
             }}
           >

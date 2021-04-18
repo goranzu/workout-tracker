@@ -2,6 +2,7 @@ import React, { lazy, Suspense } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import Header from "./components/header/Header";
 import PrivateRoute from "./components/PrivateRoute";
+import { useAuth } from "./context/AuthContext";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
@@ -9,6 +10,10 @@ import RegisterPage from "./pages/RegisterPage";
 const DashboardPage = lazy(() => import("./pages/DashboardPage"));
 
 export default function App(): JSX.Element {
+  const { authState } = useAuth();
+  if (authState.userInfo == null) {
+    return <div>Loading...</div>;
+  }
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <Router>

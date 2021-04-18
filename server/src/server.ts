@@ -2,20 +2,39 @@ import express from "express";
 import morgan from "morgan";
 import helmet from "helmet";
 import { PrismaClient } from "@prisma/client";
-import argon2 from "argon2";
-import jwtDecode from "jwt-decode";
 import cors from "cors";
 import compression from "compression";
+import session from "express-session";
+import Redis from "ioredis";
+import connectRedis from "connect-redis";
+import csurf from "csurf";
+import cookieParser from "cookie-parser";
 import workoutRouter from "./resources/workout/workout.router";
-import { CustomRequest, JwtPayload } from "./types";
-import * as exceptions from "./exceptions";
 import * as middlewares from "./middlewares";
-import * as jwt from "./utils/jwt";
-import baseConfig from "./config";
+import * as authControllers from "./auth.controllers";
+import baseConfig from "./config/index";
 
 const prisma = new PrismaClient();
+const RedisStore = connectRedis(session);
+const redisClient = new Redis();
 
 const app = express();
+
+app.use(
+  session({
+    store: new RedisStore({ client: redisClient, disableTouch: true }),
+    saveUninitialized: false,
+    resave: false,
+    secret: baseConfig.sessionSecret!,
+    name: baseConfig.cookieName,
+    cookie: {
+      httpOnly: true,
+      secure: baseConfig.isProd,
+      sameSite: "lax",
+      maxAge: baseConfig.cookieMaxAge,
+    },
+  })
+);
 
 app.use(morgan("dev"));
 app.use(helmet());
@@ -24,123 +43,34 @@ app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
     origin: baseConfig.origin,
+    credentials: true,
   })
 );
+app.use(cookieParser());
 app.use(compression());
+
+const csrfProtection = csurf({
+  cookie: true,
+});
+
+app.use(csrfProtection);
 
 app.use((req, _res, next) => {
   req.prisma = prisma;
   next();
 });
 
-interface AuthBody {
-  username: string;
-  password: string;
-}
+app.get("/csrf-token", authControllers.getCsrfToken);
 
-app.post("/login", async (req: CustomRequest<AuthBody>, res, next) => {
-  try {
-    const { username, password } = req.body;
-    if (username == null || password == null) {
-      throw new exceptions.UserInputException();
-    }
-    const user = await prisma.user.findFirst({
-      where: { username },
-      select: { id: true, password: true, username: true },
-    });
+app.post("/login", authControllers.login);
 
-    if (user == null) {
-      throw new exceptions.UnauthorizedException();
-    }
+app.post("/register", authControllers.register);
 
-    const isPasswordValid = await argon2.verify(user.password, password);
+app.delete("/logout", middlewares.protect, authControllers.logout);
 
-    if (!isPasswordValid) {
-      throw new exceptions.UnauthorizedException();
-    }
+app.get("/user", middlewares.protect, authControllers.user);
 
-    const token = jwt.signToken({ id: user.id, username: user.username });
-
-    const decodedToken = jwtDecode<JwtPayload>(token);
-    const expiresAt = decodedToken.exp;
-
-    res.status(200).json({
-      data: { userInfo: { username: user.username }, expiresAt, token },
-    });
-
-    return;
-  } catch (err) {
-    next(err);
-    return;
-  }
-});
-
-app.post("/register", async (req: CustomRequest<AuthBody>, res, next) => {
-  try {
-    const { username, password } = req.body;
-    if (username == null || password == null) {
-      throw new exceptions.UserInputException();
-    }
-
-    const hashedPassword = await argon2.hash(password);
-
-    const user = await prisma.user.create({
-      data: {
-        username,
-        password: hashedPassword,
-      },
-      select: { id: true, username: true },
-    });
-
-    const token = jwt.signToken({ id: user.id, username: user.username });
-
-    const decodedToken = jwtDecode<JwtPayload>(token);
-    const expiresAt = decodedToken.exp;
-
-    res.status(201).json({
-      data: { userInfo: { username: user.username }, expiresAt, token },
-    });
-    return;
-  } catch (err) {
-    next(err);
-    return;
-  }
-});
-
-app.get("/protect", async function protect(req, res, next) {
-  // Check if JWT is expired
-  try {
-    const authorization = req.headers.authorization;
-    if (authorization == null) {
-      throw new exceptions.UnauthorizedException();
-    }
-
-    if (!authorization.startsWith("Bearer ")) {
-      throw new exceptions.UnauthorizedException();
-    }
-    const token = authorization.split(" ")[1];
-    let payload;
-    try {
-      payload = await jwt.verifyToken(token);
-    } catch (error) {
-      throw new exceptions.UnauthorizedException();
-    }
-
-    if (payload == null) {
-      throw new exceptions.UnauthorizedException();
-    }
-    // find the user in db
-    console.log(payload);
-  } catch (err) {
-    next(err);
-    return;
-  }
-});
-
-app.get("/", (req, res): void => {
-  res.status(200).json({ message: "hello world" });
-  return;
-});
+app.use("/api", middlewares.protect);
 
 app.use("/api/workouts", workoutRouter);
 

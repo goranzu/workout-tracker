@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import Form from "../components/form/Form";
-import { publicAxios } from "../lib/fetch";
 import { useForm } from "../lib/useForm";
 import { AuthAxiosResponse } from "../../types";
 import { Redirect } from "react-router";
 import { useAuth } from "../context/AuthContext";
+import { useAxios } from "../context/AxiosContext";
 
 export default function LoginPage(): JSX.Element {
   const { getFieldProps, getFieldsValue } = useForm({
@@ -12,6 +12,7 @@ export default function LoginPage(): JSX.Element {
     password: "",
   });
   const { setAuthState } = useAuth();
+  const { appAxios } = useAxios();
 
   const [isLoading, setIsLoading] = useState(false);
   const [redirect, setRedirect] = useState(false);
@@ -33,7 +34,7 @@ export default function LoginPage(): JSX.Element {
             try {
               // TODO: Give user a message that signup was successfull
               // TODO: Handle Errors
-              const { data } = await publicAxios.post<AuthAxiosResponse>(
+              const { data } = await appAxios.post<AuthAxiosResponse>(
                 "/login",
                 {
                   username,

@@ -2,25 +2,27 @@ import React from "react";
 import { Route, Redirect } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
+type PrivateRouteProps = {
+  children: React.ReactNode;
+  path: string;
+  exact?: boolean;
+};
+
 export default function PrivateRoute({
   children,
   path,
   exact = false,
-}: {
-  children: React.ReactNode;
-  path: string;
-  exact?: boolean;
-}): JSX.Element {
-  const { isAuthenticated } = useAuth();
+}: PrivateRouteProps): JSX.Element {
+  const { authState } = useAuth();
   return (
     <Route
       path={path}
       exact={exact}
       render={() => {
-        if (isAuthenticated()) {
+        if (authState.isAuthenticated) {
           return children;
         } else {
-          return <Redirect to="/" />;
+          return <Redirect to="/login" />;
         }
       }}
     ></Route>

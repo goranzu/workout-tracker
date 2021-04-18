@@ -1,7 +1,6 @@
 export type AuthResponse = {
-  userInfo: { username: string };
-  token: string;
-  expiresAt: number;
+  username: string;
+  id: string;
 };
 
 export type AuthAxiosResponse = {
