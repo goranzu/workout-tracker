@@ -1,15 +1,32 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import baseConfig from "./config";
-import { BaseException } from "./exceptions";
+import * as exceptions from "./exceptions";
 
-function errorHandler(err: BaseException, req: Request, res: Response): void {
+function protect(req: Request, res: Response, next: NextFunction) {
+  const { userId } = req.session;
+  try {
+    if (!userId) {
+      throw new exceptions.UnauthorizedException();
+    }
+    next();
+  } catch (error) {
+    next(error);
+  }
+}
+
+function errorHandler(
+  err: Error & { statusCode?: number },
+  req: Request,
+  res: Response,
+  _next: NextFunction
+): void {
+  console.error(err);
   const statusCode = err.statusCode || 500;
-
-  console.log(err);
+  const message = err.message || "Something went wrong...";
 
   res.status(statusCode).json({
     error: {
-      message: err.message,
+      message,
       stack: baseConfig.isDev && err.stack,
       path: req.originalUrl,
     },
@@ -17,4 +34,4 @@ function errorHandler(err: BaseException, req: Request, res: Response): void {
   return;
 }
 
-export { errorHandler };
+export { errorHandler, protect };

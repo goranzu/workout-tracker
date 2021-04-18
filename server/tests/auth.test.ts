@@ -24,11 +24,11 @@ const PROTECT_URL = `/protect`;
 const request = supertest(app);
 
 const prisma = new PrismaClient();
-const prismaDelete = new PrismaDelete();
+const prismaDelete = new PrismaDelete(prisma);
 
 async function cascadeDelete(model: string, where = {}): Promise<void> {
   await prismaDelete.onDelete({ model, where });
-  await prisma.user.deleteMany({ where });
+  // await prisma.user.deleteMany({ where });
 }
 
 afterEach(async () => {

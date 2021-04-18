@@ -12,9 +12,12 @@ declare module "express-serve-static-core" {
       | undefined
     >;
   }
-  // interface Response {
-  //   myField?: string;
-  // }
+}
+
+declare module "express-session" {
+  interface Session {
+    userId: string;
+  }
 }
 
 export interface Exercise {
@@ -32,4 +35,9 @@ export interface Workout {
 
 export interface CustomRequest<T> extends Request {
   body: T;
+}
+
+export interface AuthBody {
+  username: string;
+  password: string;
 }
