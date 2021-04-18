@@ -1,24 +1,42 @@
-import React, { useContext } from "react";
-import { Link } from "react-router-dom";
-import { AuthContext } from "../../context/AuthContext";
+import React from "react";
+import { Link, useHistory } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 import classes from "./header.module.css";
 
 export default function Header(): JSX.Element {
-  const { authState, isAuthenticated } = useContext(AuthContext);
+  const { authState, isAuthenticated, logout } = useAuth();
+  const history = useHistory();
   return (
     <header className={classes.header}>
       <p>workout tracker</p>
-      {isAuthenticated() && <p>{authState.userInfo?.username}</p>}
-      <nav>
-        {isAuthenticated() ? (
-          <Link to="/dashboard">Dashboard</Link>
-        ) : (
-          <>
-            <Link to="/register">Register</Link>
-            <Link to="/login">Login</Link>
-          </>
+
+      <div className={classes.right}>
+        {isAuthenticated() && <p>{authState.userInfo?.username}</p>}
+        <nav>
+          {isAuthenticated() ? (
+            <Link to="/dashboard">Dashboard</Link>
+          ) : (
+            <>
+              <Link to={isAuthenticated() ? "/dashboard" : "/register"}>
+                Register
+              </Link>
+              <Link to={isAuthenticated() ? "/dashboard" : "/login"}>
+                Login
+              </Link>
+            </>
+          )}
+        </nav>
+        {isAuthenticated() && (
+          <button
+            onClick={() => {
+              logout();
+              history.push("/login");
+            }}
+          >
+            Logout
+          </button>
         )}
-      </nav>
+      </div>
     </header>
   );
 }

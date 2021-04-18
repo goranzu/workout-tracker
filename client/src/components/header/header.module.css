@@ -10,3 +10,10 @@
   grid-auto-flow: column;
   gap: 1em;
 }
+
+.right {
+  display: grid;
+  grid-auto-flow: column;
+  align-items: center;
+  gap: 2rem;
+}

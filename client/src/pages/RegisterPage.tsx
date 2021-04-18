@@ -1,8 +1,8 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { Redirect } from "react-router";
 import { AuthAxiosResponse } from "../../types";
 import Form from "../components/form/Form";
-import { AuthContext } from "../context/AuthContext";
+import { useAuth } from "../context/AuthContext";
 import { publicAxios } from "../lib/fetch";
 import { useForm } from "../lib/useForm";
 
@@ -13,7 +13,7 @@ export default function RegisterPage(): JSX.Element {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [redirect, setRedirect] = useState(false);
-  const { setAuthState } = useContext(AuthContext);
+  const { setAuthState } = useAuth();
 
   return (
     <>

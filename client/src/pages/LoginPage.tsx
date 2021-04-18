@@ -1,17 +1,17 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import Form from "../components/form/Form";
 import { publicAxios } from "../lib/fetch";
 import { useForm } from "../lib/useForm";
 import { AuthAxiosResponse } from "../../types";
 import { Redirect } from "react-router";
-import { AuthContext } from "../context/AuthContext";
+import { useAuth } from "../context/AuthContext";
 
 export default function LoginPage(): JSX.Element {
   const { getFieldProps, getFieldsValue } = useForm({
     username: "",
     password: "",
   });
-  const { setAuthState } = useContext(AuthContext);
+  const { setAuthState } = useAuth();
 
   const [isLoading, setIsLoading] = useState(false);
   const [redirect, setRedirect] = useState(false);
@@ -41,7 +41,6 @@ export default function LoginPage(): JSX.Element {
                 },
               );
 
-              console.log(data);
               setAuthState(data.data);
               setIsLoading(false);
               setRedirect(true);

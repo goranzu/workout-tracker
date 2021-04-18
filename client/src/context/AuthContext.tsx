@@ -1,10 +1,17 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 import { AuthResponse } from "../../types";
 
+interface AuthContextState {
+  userInfo: { username: string } | null;
+  token: string | null;
+  expiresAt: number | null;
+}
+
 interface AuthContextInterface {
-  authState: AuthResponse;
+  authState: AuthContextState;
   setAuthState: (info: AuthResponse) => void;
   isAuthenticated: () => boolean;
+  logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextInterface>(
@@ -20,11 +27,11 @@ function AuthProvider({
   const expiresAt = localStorage.getItem("expiresAt");
   const userInfo = localStorage.getItem("userInfo");
 
-  const [authState, setAuthState] = useState<AuthResponse>({
+  const [authState, setAuthState] = useState({
     token,
     expiresAt: expiresAt ? Number(expiresAt) : null,
     userInfo: userInfo ? JSON.parse(userInfo) : null,
-  } as AuthResponse);
+  });
 
   function setAuthInfo(info: AuthResponse): void {
     localStorage.setItem("token", info.token);
@@ -41,12 +48,24 @@ function AuthProvider({
     return new Date().getTime() / 1000 < authState.expiresAt;
   }
 
+  function logout() {
+    localStorage.removeItem("token");
+    localStorage.removeItem("expiresAt");
+    localStorage.removeItem("userInfo");
+    setAuthState({
+      expiresAt: null,
+      token: null,
+      userInfo: null,
+    });
+  }
+
   return (
     <AuthContext.Provider
       value={{
         authState,
         setAuthState: (info) => setAuthInfo(info),
         isAuthenticated,
+        logout,
       }}
     >
       {children}
@@ -54,4 +73,8 @@ function AuthProvider({
   );
 }
 
-export { AuthContext, AuthProvider };
+function useAuth(): AuthContextInterface {
+  return useContext(AuthContext);
+}
+
+export { AuthContext, AuthProvider, useAuth };
