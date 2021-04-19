@@ -42,9 +42,8 @@ export default function RegisterPage(): JSX.Element {
               // TODO: Give user a message that signup was successfull
               // TODO: Handle Errors
               setAuthState(data.data);
-              setRedirect(true);
               setIsLoading(false);
-              console.log(data);
+              setRedirect(true);
             } catch (error) {
               console.error(error.response);
               setIsLoading(false);

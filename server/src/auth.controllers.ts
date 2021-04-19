@@ -40,8 +40,6 @@ async function login(
 
     req.session.userId = user.id;
 
-    console.log(req.session);
-
     res.status(200).json({
       data: { userInfo: { username: user.username } },
     });

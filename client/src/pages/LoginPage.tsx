@@ -46,7 +46,7 @@ export default function LoginPage(): JSX.Element {
               setIsLoading(false);
               setRedirect(true);
             } catch (error) {
-              console.error(error.response);
+              console.error(error);
               setIsLoading(false);
             }
           }}

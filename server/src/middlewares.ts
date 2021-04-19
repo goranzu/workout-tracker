@@ -20,7 +20,7 @@ function errorHandler(
   res: Response,
   _next: NextFunction
 ): void {
-  console.error(err);
+  // console.log(err);
   const statusCode = err.statusCode || 500;
   const message = err.message || "Something went wrong...";
 

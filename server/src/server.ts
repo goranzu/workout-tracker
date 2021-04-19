@@ -53,7 +53,9 @@ const csrfProtection = csurf({
   cookie: true,
 });
 
-app.use(csrfProtection);
+if (baseConfig.isProd) {
+  app.use(csrfProtection);
+}
 
 app.use((req, _res, next) => {
   req.prisma = prisma;

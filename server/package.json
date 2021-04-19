@@ -4,7 +4,7 @@
   "description": "app server",
   "main": "dist/index.js",
   "scripts": {
-    "test": "jest --detectOpenHandles --watch",
+    "test": "npx dotenv -e .env.test -- jest --detectOpenHandles --watch",
     "watch": "tsc --watch --preserveWatchOutput",
     "dev": "nodemon dist/src",
     "db:migrate-test": "npx dotenv -e .env.test -- prisma migrate dev",
