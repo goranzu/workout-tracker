@@ -74,7 +74,7 @@ app.get("/user", middlewares.protect, authControllers.user);
 
 app.use("/api", middlewares.protect);
 
-app.use("/api/workouts", workoutRouter);
+app.use("/api/workout", workoutRouter);
 
 app.use(middlewares.errorHandler);
 

@@ -15,30 +15,30 @@ interface Response extends supertest.Response {
   };
 }
 
+export async function getSessionCookie(req): Promise<any> {
+  const response = await req
+    .post("/login")
+    .send({ username: "seed", password: "password" });
+  expect(response.status).toBe(200);
+  expect(response.headers).toHaveProperty("set-cookie");
+  return response.headers["set-cookie"].pop().split(";")[0];
+}
+
 const request = supertest(app);
 
 const prisma = new PrismaClient();
 
 beforeAll(async () => {
   await prisma.$connect();
+  await prisma.user.deleteMany({ where: {} });
+  const hashedPassword = await argon.hash("password");
+  await prisma.user.create({
+    data: { username: "seed", password: hashedPassword },
+  });
 });
 
 afterAll(async () => {
   await prisma.$disconnect();
-});
-
-beforeEach(async () => {
-  const hashedPassword = await argon.hash("password");
-  await prisma.user.create({
-    data: {
-      username: "seed",
-      password: hashedPassword,
-    },
-  });
-});
-
-afterEach(async () => {
-  await prisma.user.deleteMany({ where: {} });
 });
 
 const user = {
@@ -94,5 +94,22 @@ describe("Register", () => {
 
     expect(u).toBeTruthy();
     expect(u?.password).not.toEqual(user.password);
+  });
+});
+
+describe("Logout", () => {
+  let cookies;
+  beforeAll(async () => {
+    cookies = await getSessionCookie(request);
+  });
+  test("should return a 204 on logout", async () => {
+    const response: Response = await request
+      .get("/user")
+      .set("Cookie", [cookies]);
+    expect(response.status).toBe(200);
+  });
+  test("should fail with 401 if session cookie is not present", async () => {
+    const response: Response = await request.get("/user");
+    expect(response.status).toBe(401);
   });
 });
