@@ -7,7 +7,7 @@ import baseConfig from "./config";
 function getCsrfToken(req: Request, res: Response) {
   res.status(200).json({
     data: {
-      csrfToken: req.csrfToken(),
+      csrfToken: req.csrfToken()
     },
   });
   return;
@@ -41,7 +41,7 @@ async function login(
     req.session.userId = user.id;
 
     res.status(200).json({
-      data: { userInfo: { username: user.username } },
+      data: { userInfo: { username: user.username, id: user.id } },
     });
 
     return;
@@ -75,7 +75,7 @@ async function register(
     req.session.userId = user.id;
 
     res.status(201).json({
-      data: { userInfo: { username: user.username } },
+      data: { userInfo: { username: user.username, id: user.id } },
     });
     return;
   } catch (err) {

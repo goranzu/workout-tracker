@@ -11,6 +11,7 @@ declare module "express-serve-static-core" {
       | Prisma.RejectPerOperation
       | undefined
     >;
+    userId: string;
   }
 }
 
@@ -21,10 +22,11 @@ declare module "express-session" {
 }
 
 export interface Exercise {
-  name?: string;
+  name: string;
   sets?: number;
-  repsPerSet?: number[];
+  repsPerSet?: number;
   distance?: number;
+  weightLifted?: number;
 }
 
 export interface Workout {

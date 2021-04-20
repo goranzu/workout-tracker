@@ -78,8 +78,8 @@ select {
 }
 
 #root {
-  max-width: 75rem;
-  margin-left: auto;
-  margin-right: auto;
-  padding: 0 1em;
+    max-width: 75rem;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 1em;
 }

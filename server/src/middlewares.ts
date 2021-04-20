@@ -8,6 +8,8 @@ function protect(req: Request, res: Response, next: NextFunction) {
     if (!userId) {
       throw new exceptions.UnauthorizedException();
     }
+
+    req.userId = userId;
     next();
   } catch (error) {
     next(error);
@@ -20,7 +22,7 @@ function errorHandler(
   res: Response,
   _next: NextFunction
 ): void {
-  // console.log(err);
+  console.log(err);
   const statusCode = err.statusCode || 500;
   const message = err.message || "Something went wrong...";
 

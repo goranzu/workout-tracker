@@ -18,6 +18,7 @@ export default function DashboardPage(): JSX.Element {
   return (
     <main>
       <h1>Dashboard</h1>
+      <p>show previous workouts here</p>
     </main>
   );
 }

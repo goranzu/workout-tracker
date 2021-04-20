@@ -7,7 +7,7 @@
     "test": "npx dotenv -e .env.test -- jest --detectOpenHandles --watch",
     "watch": "tsc --watch --preserveWatchOutput",
     "dev": "nodemon dist/src",
-    "db:migrate-test": "npx dotenv -e .env.test -- prisma migrate dev",
+    "db:migrate-test": "npx dotenv -e .env.test -- prisma migrate deploy",
     "db:migrate": "npx prisma migrate dev"
   },
   "author": "Goran Tenic",

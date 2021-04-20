@@ -53,7 +53,7 @@ const csrfProtection = csurf({
   cookie: true,
 });
 
-if (baseConfig.isProd) {
+if (baseConfig.isProd || baseConfig.isDev) {
   app.use(csrfProtection);
 }
 

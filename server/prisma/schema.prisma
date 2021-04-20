@@ -19,15 +19,16 @@ model User {
 }
 
 model Exercise {
-  id         String   @id @default(cuid())
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  name       String
-  sets       Int?
-  repsPerSet Int?
-  workoutId  String
-  distance   Float?
-  workout    Workout  @relation(fields: [workoutId], references: [id])
+  id           String   @id @default(cuid())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  name         String
+  sets         Int?
+  repsPerSet   Int?
+  workoutId    String
+  distance     Float?
+  weightLifted Float?
+  workout      Workout  @relation(fields: [workoutId], references: [id])
 }
 
 model Workout {

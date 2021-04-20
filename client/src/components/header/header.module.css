@@ -3,6 +3,9 @@
   justify-content: space-between;
   padding: 2em 0;
   align-items: center;
+
+  grid-column: 1 / -1;
+  grid-row-start: 1;
 }
 
 .header nav {

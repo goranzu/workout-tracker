@@ -21,7 +21,7 @@ function AxiosProvider({ children }: AxiosProviderProps): JSX.Element {
         const { data } = await appAxios.get("/csrf-token");
         appAxios.defaults.headers["X-CSRF-Token"] = data.data.csrfToken;
       } catch (error) {
-        console.error(error);
+        console.error(error.response);
       }
     })();
   }, [appAxios]);

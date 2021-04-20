@@ -46,7 +46,10 @@ function AuthProvider({ children }: AuthProviderProps): JSX.Element {
   }, [appAxios]);
 
   function setAuthInfo(info: AuthResponse): void {
-    setAuthState({ userInfo: info, isAuthenticated: !info.id });
+    setAuthState({
+      userInfo: info.userInfo,
+      isAuthenticated: !!info.userInfo.id,
+    });
   }
 
   async function logout() {
