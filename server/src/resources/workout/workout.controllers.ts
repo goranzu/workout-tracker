@@ -23,9 +23,9 @@ async function createWorkout(
   next: NextFunction
 ) {
   try {
-    let { workoutType, exercises, duration } = req.body;
+    let { workoutType, exercises, duration, userInputDate } = req.body;
 
-    if (workoutType == null || exercises == null || duration == null) {
+    if (workoutType == null || exercises == null || duration == null || userInputDate == null) {
       throw new UserInputException();
     }
 
@@ -39,6 +39,7 @@ async function createWorkout(
       data: {
         duration,
         workoutType,
+        userInputDate,
         user: {
           connect: { id: req.userId },
         },

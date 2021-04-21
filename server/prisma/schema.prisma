@@ -1,44 +1,45 @@
 datasource db {
-  provider = "postgres"
-  url      = env("DATABASE_URL")
+    provider = "postgres"
+    url      = env("DATABASE_URL")
 }
 
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 model User {
-  id        String    @id @default(cuid())
-  username  String    @unique
-  password  String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  lastLogin DateTime?
-  /// @onDelete(CASCADE)
-  workouts  Workout[]
+    id        String    @id @default(cuid())
+    username  String    @unique
+    password  String
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
+    lastLogin DateTime?
+    /// @onDelete(CASCADE)
+    workouts  Workout[]
 }
 
 model Exercise {
-  id           String   @id @default(cuid())
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  name         String
-  sets         Int?
-  repsPerSet   Int?
-  workoutId    String
-  distance     Float?
-  weightLifted Float?
-  workout      Workout  @relation(fields: [workoutId], references: [id])
+    id           String   @id @default(cuid())
+    createdAt    DateTime @default(now())
+    updatedAt    DateTime @updatedAt
+    name         String
+    sets         Int?
+    repsPerSet   Int?
+    workoutId    String
+    distance     Float?
+    weightLifted Float?
+    workout      Workout  @relation(fields: [workoutId], references: [id])
 }
 
 model Workout {
-  id          String     @id @default(cuid())
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  workoutType String
-  duration    Float
-  userId      String?
-  user        User?      @relation(fields: [userId], references: [id])
-  /// @onDelete(CASCADE)
-  exercises   Exercise[]
+    id            String     @id @default(cuid())
+    createdAt     DateTime   @default(now())
+    updatedAt     DateTime   @updatedAt
+    workoutType   String
+    duration      Float
+    userId        String?
+    userInputDate DateTime
+    user          User?      @relation(fields: [userId], references: [id])
+    /// @onDelete(CASCADE)
+    exercises     Exercise[]
 }
