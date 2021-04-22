@@ -33,7 +33,7 @@ export interface Workout {
   exercises?: Exercise[];
   workoutType: "cardio" | "lifting";
   duration?: number;
-  userInputDate: string
+  userInputDate: Date;
 }
 
 export interface CustomRequest<T> extends Request {

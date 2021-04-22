@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useCreateWorkout } from "../../lib/useWorkout";
 import { useForm } from "../../lib/useForm";
 import LiftingWorkoutFormSection from "../LiftingWorkoutFormSection";
 
@@ -13,11 +14,15 @@ const workoutTypes = [
   },
 ];
 
+//  Create an array of liftingWorkoutInputTypes {name: "", ...etc}, keep it in state and render the inputs.
+// On add concat to state, on delete filter to state, on update map to state
+// Create a function to handle changes. Function per input or on function that takes an parameter.
 export default function CreateWorkout(): JSX.Element {
   const [type, setType] = useState<"cardio" | "lifting">("cardio");
   const [liftingWorkoutInputList, setLiftingWorkoutInputList] = useState<any[]>(
     [],
   );
+  const { mutate: postWorkout, data, status, error } = useCreateWorkout();
 
   const {
     getFieldProps: getMetaFieldProps,
@@ -28,6 +33,10 @@ export default function CreateWorkout(): JSX.Element {
     getFieldProps: getCardioFieldProps,
     getFieldsValue: getCardioFieldValue,
   } = useForm({ name: "", distance: "" });
+
+  console.log(data);
+  console.log(status);
+  console.log(error?.response);
 
   return (
     <form
@@ -40,13 +49,15 @@ export default function CreateWorkout(): JSX.Element {
           workoutType: meta.type,
           userInputDate: meta.date,
           duration: meta.duration,
-          exercises: { ...exercises },
+          exercises: [...exercises],
         };
-        console.log(workout);
+        // console.log(workout);
+        postWorkout(workout);
       }}
     >
       <h2>Create Workout</h2>
-      <fieldset>
+      <fieldset disabled={status === "loading"}>
+        {/* {status === "error" && <p>{error?.response?.data.error.message}</p>} */}
         <label htmlFor="date">
           Date of the workout
           <input type="date" {...getMetaFieldProps("date")} />

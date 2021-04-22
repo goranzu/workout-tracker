@@ -33,7 +33,7 @@ app.use(
       sameSite: "lax",
       maxAge: baseConfig.cookieMaxAge,
     },
-  })
+  }),
 );
 
 app.use(morgan("dev"));
@@ -44,7 +44,7 @@ app.use(
   cors({
     origin: baseConfig.origin,
     credentials: true,
-  })
+  }),
 );
 app.use(cookieParser());
 app.use(compression());
