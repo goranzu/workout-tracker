@@ -82,4 +82,21 @@ select {
     margin-left: auto;
     margin-right: auto;
     padding: 0 1em;
+
+    --clr-dark-100: #4c566a;
+    --clr-dark-200: #434c5e;
+    --clr-dark-300: #3b4252;
+    --clr-dark-400: #2e3440;
+
+    --clr-light-100: #eceff4;
+    --clr-light-200: #e5e9f0;
+    --clr-light-300: #d8dee9;
+
+    --clr-accent-100: #8fbcbb;
+    --clr-accent-200: #88c0d0;
+    --clr-accent-300: #81a1c1;
+    --clr-accent-400: #5e81ac;
+
+    --clr-accent-error: #bf616a;
+    --clr-accent-succes: #a3be8c;
 }
