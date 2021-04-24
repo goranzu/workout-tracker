@@ -6,6 +6,7 @@ import App from "./App";
 import { AuthProvider } from "./context/AuthContext";
 import { AxiosProvider } from "./context/AxiosContext";
 import "./index.css";
+import "./typography.css";
 
 const queryClient = new QueryClient();
 

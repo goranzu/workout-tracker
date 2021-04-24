@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Redirect } from "react-router";
 import { AuthAxiosResponse } from "../../types";
-import Form from "../components/form/Form";
 import { useAuth } from "../context/AuthContext";
 import { useAxios } from "../context/AxiosContext";
 import { useForm } from "../lib/useForm";
@@ -21,8 +20,7 @@ export default function RegisterPage(): JSX.Element {
       {redirect && <Redirect to="/dashboard" />}
       <main>
         <h1 style={{ textAlign: "center", marginBottom: "1em" }}>Register</h1>
-        <Form
-          isLoading={isLoading}
+        <form
           method="POST"
           onSubmit={async (e) => {
             e.preventDefault();
@@ -59,7 +57,7 @@ export default function RegisterPage(): JSX.Element {
             <input {...getFieldProps("password")} type="password" />
           </label>
           <button type="submit">Login</button>
-        </Form>
+        </form>
       </main>
     </>
   );

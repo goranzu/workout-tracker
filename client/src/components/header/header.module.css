@@ -1,17 +1,33 @@
 .header {
-  display: flex;
-  justify-content: space-between;
   padding: 2em 0;
-  align-items: center;
-
+  box-shadow: var(--bs);
   grid-column: 1 / -1;
   grid-row-start: 1;
+  position: relative;
+}
+
+.header::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  z-index: -1;
+  background-color: var(--clr-bg-dark);
+}
+
+.header > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .header nav {
   display: grid;
   grid-auto-flow: column;
   gap: 1em;
+  color: var(--clr-text-light);
 }
 
 .right {
@@ -19,4 +35,13 @@
   grid-auto-flow: column;
   align-items: center;
   gap: 2rem;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.logo span {
+  margin-left: 0.5em;
 }

@@ -34,10 +34,6 @@ html:focus-within {
 body {
   min-height: 100vh;
   text-rendering: optimizeSpeed;
-  line-height: 1.5;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -77,26 +73,142 @@ select {
   }
 }
 
-#root {
-    max-width: 75rem;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 0 1em;
+/* Own Styles Start */
 
-    --clr-dark-100: #4c566a;
-    --clr-dark-200: #434c5e;
-    --clr-dark-300: #3b4252;
-    --clr-dark-400: #2e3440;
+:root {
+  --clr-dark-100: #4c566a;
+  --clr-dark-200: #434c5e;
+  --clr-dark-300: #3b4252;
+  --clr-dark-400: #2e3440;
 
-    --clr-light-100: #eceff4;
-    --clr-light-200: #e5e9f0;
-    --clr-light-300: #d8dee9;
+  --clr-light-100: #eceff4;
+  --clr-light-200: #e5e9f0;
+  --clr-light-300: #d8dee9;
 
-    --clr-accent-100: #8fbcbb;
-    --clr-accent-200: #88c0d0;
-    --clr-accent-300: #81a1c1;
-    --clr-accent-400: #5e81ac;
+  --clr-accent-100: #88c0d0;
 
-    --clr-accent-error: #bf616a;
-    --clr-accent-succes: #a3be8c;
+  --clr-bg-light: var(--clr-light-100);
+  --clr-text-light: var(--clr-light-100);
+  --clr-bg-dark: var(--clr-dark-300);
+  --clr-text-dark: var(--clr-dark-300);
+
+  --clr-accent-error: #bf616a;
+  --clr-accent-succes: #a3be8c;
+
+  --font-scale: 1.125;
+  --base-font: 1.125rem;
+  --fs-400: var(--base-font);
+  --fs-300: calc(var(--base-font) / var(--font-scale));
+  --fs-200: calc(var(--fs-300) / var(--font-scale));
+  --fs-100: calc(var(--fs-200) / var(--font-scale));
+
+  --fs-500: calc(var(--base-font) * var(--font-scale));
+  --fs-600: calc(var(--fs-500) * var(--font-scale));
+  --fs-700: calc(var(--fs-600) * var(--font-scale));
+  --fs-800: calc(var(--fs-700) * var(--font-scale));
+  --fs-900: calc(var(--fs-800) * var(--font-scale));
+
+  --maxWidth: 75rem;
+  --bs: 0 3px 6px rgba(0, 0, 0, 0.16);
+}
+
+/* #root {
+  max-width: 75rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 1em;
+} */
+
+body {
+  background-color: var(--clr-bg-light);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.loginPage.split {
+  height: calc(100vh - 107px);
+  position: relative;
+  padding-top: 6em;
+}
+
+.loginPage.split::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50%;
+  height: 100%;
+  background-color: var(--clr-bg-dark);
+  z-index: -1;
+}
+
+.error-text {
+  opacity: 0;
+  color: var(--clr-accent-error);
+  transition: opacity 0.1s linear;
+}
+
+.error-text[aria-hidden="false"] {
+  opacity: 1;
+}
+
+.loginPage form {
+  --space: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.loginPage fieldset {
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.loginPage fieldset > * + * {
+  margin-top: var(--space);
+}
+
+.loginPage fieldset > * {
+  display: block;
+}
+
+.loginPage fieldset input {
+  display: block;
+  width: 20rem;
+  border: none;
+  background-color: var(--clr-light-300);
+  box-shadow: var(--bs);
+  padding: 0.25em 0.75em;
+}
+
+/* Overwrite margin top set in this component */
+
+.loginPage fieldset input + p {
+  margin-top: 5px;
+}
+
+.loginPage fieldset label {
+  margin-top: 10px;
+}
+
+.loginPage fieldset button {
+  margin-top: 1.75rem;
+  padding: 0.4em 5em;
+  /* width: 13rem; */
+  border: none;
+  background-color: var(--clr-accent-100);
+  color: var(--clr-text-light);
+  box-shadow: var(--bs);
+  cursor: pointer;
+}
+
+.loginPage form a {
+  color: var(--clr-accent-100);
+  text-decoration: underline;
 }
