@@ -1,6 +1,7 @@
 import React from "react";
 import { Link, useHistory } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import Button from "../button/Button";
 import Wrapper from "../wrapper/Wrapper";
 import classes from "./header.module.css";
 
@@ -135,14 +136,16 @@ export default function Header(): JSX.Element {
             </nav>
           ) : null}
           {authState.isAuthenticated && (
-            <button
+            <Button
+              type="button"
+              variant="small"
               onClick={async () => {
                 await logout();
                 history.push("/login");
               }}
             >
               Logout
-            </button>
+            </Button>
           )}
         </div>
       </Wrapper>

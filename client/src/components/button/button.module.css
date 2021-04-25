@@ -1,0 +1,15 @@
+.button {
+  /* margin-top: 1.75rem; */
+  padding: 0.4em 5em;
+  /* width: 13rem; */
+  border: none;
+  background-color: var(--clr-accent-100);
+  color: var(--clr-text-light);
+  box-shadow: var(--bs);
+  cursor: pointer;
+}
+
+.button__small {
+  padding-left: 2em;
+  padding-right: 2em;
+}

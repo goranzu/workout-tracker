@@ -132,13 +132,15 @@ a:hover {
   text-decoration: underline;
 }
 
-.loginPage.split {
+.loginPage.split,
+.registerPage.split {
   height: calc(100vh - 107px);
   position: relative;
   padding-top: 6em;
 }
 
-.loginPage.split::after {
+.loginPage.split::after,
+.registerPage.split::after {
   content: "";
   position: absolute;
   top: 0;
@@ -159,26 +161,31 @@ a:hover {
   opacity: 1;
 }
 
-.loginPage form {
+.loginPage form,
+.registerPage form {
   --space: 1.5rem;
   margin-top: 1.5rem;
 }
 
-.loginPage fieldset {
+.loginPage fieldset,
+.registerPage fieldset {
   margin: 0;
   padding: 0;
   border: none;
 }
 
-.loginPage fieldset > * + * {
+.loginPage fieldset > * + *,
+.registerPage fieldset > * + * {
   margin-top: var(--space);
 }
 
-.loginPage fieldset > * {
+.loginPage fieldset > *,
+.registerPage fieldset > * {
   display: block;
 }
 
-.loginPage fieldset input {
+.loginPage fieldset input,
+.registerPage fieldset input {
   display: block;
   width: 20rem;
   border: none;
@@ -189,26 +196,35 @@ a:hover {
 
 /* Overwrite margin top set in this component */
 
-.loginPage fieldset input + p {
+.loginPage fieldset input + p,
+.registerPage fieldset input + p {
   margin-top: 5px;
 }
 
-.loginPage fieldset label {
+.loginPage fieldset label,
+.registerPage fieldset label {
   margin-top: 10px;
 }
 
-.loginPage fieldset button {
-  margin-top: 1.75rem;
-  padding: 0.4em 5em;
-  /* width: 13rem; */
-  border: none;
-  background-color: var(--clr-accent-100);
-  color: var(--clr-text-light);
-  box-shadow: var(--bs);
-  cursor: pointer;
-}
-
-.loginPage form a {
+.loginPage form a,
+.registerPage form a {
   color: var(--clr-accent-100);
   text-decoration: underline;
+}
+
+.loginPage h1,
+.registerPage h1 {
+  position: relative;
+  display: inline-block;
+}
+
+.loginPage h1::after,
+.registerPage h1::after {
+  content: "";
+  position: absolute;
+  bottom: 2px;
+  right: -15px;
+  background-color: var(--clr-text-dark);
+  width: 40px;
+  height: 3px;
 }
