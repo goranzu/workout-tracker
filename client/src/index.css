@@ -112,13 +112,6 @@ select {
   --bs: 0 3px 6px rgba(0, 0, 0, 0.16);
 }
 
-/* #root {
-  max-width: 75rem;
-  margin-left: auto;
-  margin-right: auto;
-  padding: 0 1em;
-} */
-
 body {
   background-color: var(--clr-bg-light);
 }
@@ -136,19 +129,7 @@ a:hover {
 .registerPage.split {
   height: calc(100vh - 107px);
   position: relative;
-  padding-top: 6em;
-}
-
-.loginPage.split::after,
-.registerPage.split::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 50%;
-  height: 100%;
-  background-color: var(--clr-bg-dark);
-  z-index: -1;
+  padding-top: 4em;
 }
 
 .error-text {
@@ -159,6 +140,13 @@ a:hover {
 
 .error-text[aria-hidden="false"] {
   opacity: 1;
+}
+
+.loginPage .link,
+.loginPage h1,
+.registerPage .link,
+.registerPage h1 {
+  text-align: center;
 }
 
 .loginPage form,
@@ -187,11 +175,17 @@ a:hover {
 .loginPage fieldset input,
 .registerPage fieldset input {
   display: block;
-  width: 20rem;
+  width: 100%;
   border: none;
   background-color: var(--clr-light-300);
   box-shadow: var(--bs);
-  padding: 0.25em 0.75em;
+  padding: 0.5em 0.75em;
+}
+
+.loginPage fieldset button,
+.registerPage fieldset button {
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* Overwrite margin top set in this component */
@@ -212,19 +206,60 @@ a:hover {
   text-decoration: underline;
 }
 
-.loginPage h1,
-.registerPage h1 {
-  position: relative;
-  display: inline-block;
+@media (min-width: 400px) {
+  .loginPage fieldset label,
+  .registerPage fieldset label {
+    max-width: 25rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
 
-.loginPage h1::after,
-.registerPage h1::after {
-  content: "";
-  position: absolute;
-  bottom: 2px;
-  right: -15px;
-  background-color: var(--clr-text-dark);
-  width: 40px;
-  height: 3px;
+@media (min-width: 700px) {
+  .loginPage.split::after,
+  .registerPage.split::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50%;
+    height: 100%;
+    background-color: var(--clr-bg-dark);
+    z-index: -1;
+  }
+
+  .loginPage fieldset label,
+  .registerPage fieldset label {
+    margin-left: 0;
+  }
+
+  .loginPage .link,
+  .loginPage h1,
+  .registerPage .link,
+  .registerPage h1 {
+    text-align: left;
+  }
+
+  .loginPage fieldset button,
+  .registerPage fieldset button {
+    margin-left: 0;
+  }
+
+  .loginPage .link,
+  .registerPage .link {
+    position: relative;
+    display: inline-block;
+    z-index: 2;
+  }
+  .loginPage .link::after,
+  .registerPage .link::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: var(--clr-bg-light);
+    width: 102%;
+    height: 100%;
+    z-index: -1;
+  }
 }

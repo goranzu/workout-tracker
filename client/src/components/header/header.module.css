@@ -6,17 +6,6 @@
   position: relative;
 }
 
-.header::after {
-  content: "";
-  position: absolute;
-  right: 0;
-  top: 0;
-  width: 50%;
-  height: 100%;
-  z-index: -1;
-  background-color: var(--clr-bg-dark);
-}
-
 .header > div {
   display: flex;
   justify-content: space-between;
@@ -27,14 +16,7 @@
   display: grid;
   grid-auto-flow: column;
   gap: 1em;
-  color: var(--clr-text-light);
-}
-
-.right {
-  display: grid;
-  grid-auto-flow: column;
-  align-items: center;
-  gap: 2rem;
+  color: var(--clr-text-dark);
 }
 
 .logo {
@@ -44,4 +26,46 @@
 
 .logo span {
   margin-left: 0.5em;
+}
+
+.right,
+.header nav {
+  color: var(--clr-text-dark);
+}
+
+.right {
+  display: flex;
+  align-items: center;
+}
+
+.right > * + * {
+  margin-left: 1em;
+}
+
+.username {
+  display: none;
+}
+
+@media (min-width: 450px) {
+  .username {
+    display: block;
+  }
+}
+
+@media (min-width: 700px) {
+  .header::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 50%;
+    height: 100%;
+    z-index: -1;
+    background-color: var(--clr-bg-dark);
+  }
+
+  .right,
+  .header nav {
+    color: var(--clr-text-light);
+  }
 }

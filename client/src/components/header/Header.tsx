@@ -128,9 +128,11 @@ export default function Header(): JSX.Element {
           <span className="bold fs-500">WorkoutTracker</span>
         </div>
         <div className={classes.right}>
-          {authState.userInfo?.username && <p>{authState.userInfo.username}</p>}
+          {authState.userInfo?.username && (
+            <p className={classes.username}>{authState.userInfo.username}</p>
+          )}
           {!authState.isAuthenticated ? (
-            <nav className="fs-500">
+            <nav>
               <Link to={"/register"}>Register</Link>
               <Link to={"/login"}>Login</Link>
             </nav>

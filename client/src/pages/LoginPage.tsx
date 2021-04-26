@@ -57,15 +57,23 @@ export default function LoginPage(): JSX.Element {
             <fieldset>
               <label htmlFor="username">
                 Username
-                <input {...getFieldProps("username")} type="text" />
+                <input
+                  className={`fs-300`}
+                  {...getFieldProps("username")}
+                  type="text"
+                />
                 <ErrorText visible={false}>Required field...</ErrorText>
               </label>
               <label htmlFor="password">
                 Password
-                <input {...getFieldProps("password")} type="password" />
+                <input
+                  className={`fs-300`}
+                  {...getFieldProps("password")}
+                  type="password"
+                />
                 <ErrorText visible={false}>Required field...</ErrorText>
               </label>
-              <p className={`fs-200`}>
+              <p className={`fs-200 link`}>
                 Don&apos;t have an account? Click{" "}
                 <span>
                   <Link to="/register">here</Link>
