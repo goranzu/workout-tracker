@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Redirect } from "react-router";
 import { Link } from "react-router-dom";
+import * as yup from "yup";
 import { AuthAxiosResponse } from "../../types";
 import Button from "../components/button/Button";
 import ErrorText from "../components/ErrorText";
@@ -9,6 +10,16 @@ import { useAuth } from "../context/AuthContext";
 import { useAxios } from "../context/AxiosContext";
 import { useForm } from "../lib/useForm";
 
+const schema = yup.object().shape({
+  username: yup.string().min(2).required(),
+  password: yup.string().min(2).required(),
+});
+
+interface ErrorInterface {
+  username: string[];
+  password: string[];
+}
+
 export default function RegisterPage(): JSX.Element {
   const { getFieldProps, getFieldsValue } = useForm({
     username: "",
@@ -16,6 +27,10 @@ export default function RegisterPage(): JSX.Element {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [redirect, setRedirect] = useState(false);
+  const [errors, setErrors] = useState<ErrorInterface>({
+    username: [],
+    password: [],
+  });
   const { setAuthState } = useAuth();
   const { appAxios } = useAxios();
 
@@ -29,11 +44,19 @@ export default function RegisterPage(): JSX.Element {
             method="POST"
             onSubmit={async (e) => {
               e.preventDefault();
+              setErrors({ username: [], password: [] });
               const { username, password } = getFieldsValue;
-              if (!username || !password) {
-                return;
-              }
               try {
+                await schema.validate(
+                  {
+                    username,
+                    password,
+                  },
+                  {
+                    abortEarly: false,
+                  },
+                );
+
                 setIsLoading(true);
                 const { data } = await appAxios.post<AuthAxiosResponse>(
                   "/register",
@@ -42,13 +65,35 @@ export default function RegisterPage(): JSX.Element {
                     password,
                   },
                 );
+
                 // TODO: Give user a message that signup was successfull
-                // TODO: Handle Errors
                 setAuthState(data.data);
                 setIsLoading(false);
                 setRedirect(true);
               } catch (error) {
-                console.error(error.response);
+                console.error(error);
+
+                if (error.errors) {
+                  const errors = error.inner.reduce(
+                    (
+                      acc: Record<string, string[]>,
+                      val: yup.ValidationError,
+                    ) => {
+                      if (!Array.isArray(acc[val.path!])) {
+                        acc[val.path!] = [];
+                      }
+
+                      acc[val.path!].push(
+                        val.message.charAt(0).toUpperCase() +
+                          val.message.slice(1),
+                      );
+
+                      return acc;
+                    },
+                    {},
+                  );
+                  setErrors(errors);
+                }
                 setIsLoading(false);
               }
             }}
@@ -61,7 +106,11 @@ export default function RegisterPage(): JSX.Element {
                   {...getFieldProps("username")}
                   type="text"
                 />
-                <ErrorText visible={false}>Required field...</ErrorText>
+                {
+                  <ErrorText visible={errors.username.length > 0}>
+                    {errors.username[0]}
+                  </ErrorText>
+                }
               </label>
               <label htmlFor="password">
                 Password
@@ -70,7 +119,11 @@ export default function RegisterPage(): JSX.Element {
                   {...getFieldProps("password")}
                   type="password"
                 />
-                <ErrorText visible={false}>Required field...</ErrorText>
+                {
+                  <ErrorText visible={errors.password.length > 0}>
+                    {errors.password[0]}
+                  </ErrorText>
+                }
               </label>
               <p className={`fs-200 link`}>
                 Already have an account? Click{" "}

@@ -11,7 +11,7 @@ export default function ErrorText({
 }: ErrorTextProps): JSX.Element {
   return (
     <p className="fs-100 error-text" aria-hidden={!visible}>
-      {children}
+      {children || "some placeholder text to prevent shifting"}
     </p>
   );
 }
