@@ -8,14 +8,15 @@ import ErrorText from "../components/ErrorText";
 import Wrapper from "../components/wrapper/Wrapper";
 import { useAuth } from "../context/AuthContext";
 import { useAxios } from "../context/AxiosContext";
+import formatErrors from "../lib/formatErrors";
 import { useForm } from "../lib/useForm";
 
-const schema = yup.object().shape({
+export const authSchema = yup.object().shape({
   username: yup.string().min(2).required(),
   password: yup.string().min(2).required(),
 });
 
-interface ErrorInterface {
+export interface AuthErrorInterface {
   username: string[];
   password: string[];
 }
@@ -27,7 +28,7 @@ export default function RegisterPage(): JSX.Element {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [redirect, setRedirect] = useState(false);
-  const [errors, setErrors] = useState<ErrorInterface>({
+  const [errors, setErrors] = useState<AuthErrorInterface>({
     username: [],
     password: [],
   });
@@ -47,7 +48,7 @@ export default function RegisterPage(): JSX.Element {
               setErrors({ username: [], password: [] });
               const { username, password } = getFieldsValue;
               try {
-                await schema.validate(
+                await authSchema.validate(
                   {
                     username,
                     password,
@@ -71,34 +72,17 @@ export default function RegisterPage(): JSX.Element {
                 setIsLoading(false);
                 setRedirect(true);
               } catch (error) {
-                console.error(error);
+                // console.error(error);
+                // Handle network response error
 
-                if (error.errors) {
-                  const errors = error.inner.reduce(
-                    (
-                      acc: Record<string, string[]>,
-                      val: yup.ValidationError,
-                    ) => {
-                      if (!Array.isArray(acc[val.path!])) {
-                        acc[val.path!] = [];
-                      }
-
-                      acc[val.path!].push(
-                        val.message.charAt(0).toUpperCase() +
-                          val.message.slice(1),
-                      );
-
-                      return acc;
-                    },
-                    {},
-                  );
-                  setErrors(errors);
+                if (error.inner) {
+                  setErrors(formatErrors<AuthErrorInterface>(error.inner));
                 }
                 setIsLoading(false);
               }
             }}
           >
-            <fieldset>
+            <fieldset disabled={isLoading} aria-busy={isLoading}>
               <label htmlFor="username">
                 Username
                 <input

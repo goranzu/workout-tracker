@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Form from "../components/form/Form";
 import { useForm } from "../lib/useForm";
 import { AuthAxiosResponse } from "../../types";
 import { Redirect } from "react-router";
@@ -9,6 +8,8 @@ import Wrapper from "../components/wrapper/Wrapper";
 import { Link } from "react-router-dom";
 import ErrorText from "../components/ErrorText";
 import Button from "../components/button/Button";
+import { AuthErrorInterface, authSchema } from "./RegisterPage";
+import formatErrors from "../lib/formatErrors";
 
 export default function LoginPage(): JSX.Element {
   const { getFieldProps, getFieldsValue } = useForm({
@@ -20,6 +21,10 @@ export default function LoginPage(): JSX.Element {
 
   const [isLoading, setIsLoading] = useState(false);
   const [redirect, setRedirect] = useState(false);
+  const [errors, setErrors] = useState<AuthErrorInterface>({
+    username: [],
+    password: [],
+  });
 
   return (
     <>
@@ -32,12 +37,16 @@ export default function LoginPage(): JSX.Element {
             onSubmit={async (e) => {
               e.preventDefault();
               const { username, password } = getFieldsValue;
-              if (!username || !password) {
-                return;
-              }
               try {
                 // TODO: Give user a message that signup was successfull
-                // TODO: Handle Errors
+                await authSchema.validate(
+                  {
+                    username,
+                    password,
+                  },
+                  { abortEarly: false },
+                );
+
                 const { data } = await appAxios.post<AuthAxiosResponse>(
                   "/login",
                   {
@@ -45,16 +54,21 @@ export default function LoginPage(): JSX.Element {
                     password,
                   },
                 );
+
                 setAuthState(data.data);
                 setIsLoading(false);
                 setRedirect(true);
               } catch (error) {
-                console.error(error);
+                // console.error(error);
+                // TODO: Handle network error
+                if (error.inner) {
+                  setErrors(formatErrors<AuthErrorInterface>(error.inner));
+                }
                 setIsLoading(false);
               }
             }}
           >
-            <fieldset>
+            <fieldset disabled={isLoading} aria-busy={isLoading}>
               <label htmlFor="username">
                 Username
                 <input
@@ -62,7 +76,9 @@ export default function LoginPage(): JSX.Element {
                   {...getFieldProps("username")}
                   type="text"
                 />
-                <ErrorText visible={false}>Required field...</ErrorText>
+                <ErrorText visible={errors.username.length > 0}>
+                  {errors.username[0]}
+                </ErrorText>
               </label>
               <label htmlFor="password">
                 Password
@@ -71,7 +87,9 @@ export default function LoginPage(): JSX.Element {
                   {...getFieldProps("password")}
                   type="password"
                 />
-                <ErrorText visible={false}>Required field...</ErrorText>
+                <ErrorText visible={errors.password.length > 0}>
+                  {errors.password[0]}
+                </ErrorText>
               </label>
               <p className={`fs-200 link`}>
                 Don&apos;t have an account? Click{" "}
