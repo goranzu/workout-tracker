@@ -1,13 +1,13 @@
 import { NextFunction, Request, Response } from "express";
 import argon2 from "argon2";
 import { AuthBody, CustomRequest } from "./types";
-import * as exceptions from "./exceptions";
+import * as exceptions from "./lib/exceptions";
 import baseConfig from "./config";
 
 function getCsrfToken(req: Request, res: Response) {
   res.status(200).json({
     data: {
-      csrfToken: req.csrfToken()
+      csrfToken: req.csrfToken(),
     },
   });
   return;
@@ -16,7 +16,7 @@ function getCsrfToken(req: Request, res: Response) {
 async function login(
   req: CustomRequest<AuthBody>,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   try {
     const { username, password } = req.body;
@@ -54,7 +54,7 @@ async function login(
 async function register(
   req: CustomRequest<AuthBody>,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   try {
     const { username, password } = req.body;

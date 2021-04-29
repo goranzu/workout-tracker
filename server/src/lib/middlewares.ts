@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import baseConfig from "./config";
+import baseConfig from "../config";
 import * as exceptions from "./exceptions";
 
 function protect(req: Request, res: Response, next: NextFunction) {
@@ -20,9 +20,9 @@ function errorHandler(
   err: Error & { statusCode?: number },
   req: Request,
   res: Response,
-  _next: NextFunction
+  _next: NextFunction,
 ): void {
-  console.log(err);
+  //   console.log(err);
   const statusCode = err.statusCode || 500;
   const message = err.message || "Something went wrong...";
 

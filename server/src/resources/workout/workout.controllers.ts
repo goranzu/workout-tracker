@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { UserInputException } from "../../exceptions";
+import { UserInputException } from "../../lib/exceptions";
 import { CustomRequest, Workout } from "../../types";
 
 async function getWorkouts(req: Request, res: Response, next: NextFunction) {
@@ -26,7 +26,7 @@ async function getWorkouts(req: Request, res: Response, next: NextFunction) {
         ),
       }),
     );
-    res.status(200).json({ data: workouts });
+    res.status(200).json({ data: { workouts } });
     return;
   } catch (error) {
     next(error);

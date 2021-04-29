@@ -1,13 +1,14 @@
 import { PrismaClient } from "@prisma/client";
 import supertest from "supertest";
 import { app } from "../src/server";
-import argon from "argon2";
 import { getSessionCookie } from "./auth.test";
 import { Workout } from "../src/types";
+import { initializeUser, clearUsersFromDb, testUser } from "./auth.test";
 
 const liftingWorkout: Workout = {
   workoutType: "lifting",
   duration: 1,
+  userInputDate: new Date(),
   exercises: [
     {
       name: "pull ups",
@@ -42,11 +43,6 @@ const liftingWorkout: Workout = {
   ],
 };
 
-const testUser = {
-  username: "seed",
-  password: "password",
-};
-
 interface Response extends supertest.Response {
   body: {
     data?: {
@@ -63,18 +59,8 @@ const request = supertest(app);
 
 const prisma = new PrismaClient();
 
-beforeAll(async () => {});
-
-let cookies;
-
 beforeAll(async () => {
   await prisma.$connect();
-  await prisma.user.deleteMany({ where: {} });
-  const hashedPassword = await argon.hash(testUser.password);
-  await prisma.user.create({
-    data: { username: testUser.username, password: hashedPassword },
-  });
-  cookies = await getSessionCookie(request);
 });
 
 afterAll(async () => {
@@ -82,6 +68,16 @@ afterAll(async () => {
 });
 
 describe("Workout", () => {
+  let cookies;
+
+  beforeEach(async () => {
+    await clearUsersFromDb();
+    await prisma.exercise.deleteMany({ where: {} });
+    await prisma.workout.deleteMany({ where: {} });
+    await initializeUser();
+    cookies = await getSessionCookie(request);
+  });
+
   test("should return 201 when creating a workout", async () => {
     const response = await request
       .post("/api/workout")
@@ -106,7 +102,8 @@ describe("Workout", () => {
       .post("/api/workout")
       .send(liftingWorkout)
       .set("Cookie", [cookies]);
-    expect(response.body.data.createdAt).toBeTruthy();
+
+    expect(response.body.data.date).toBeTruthy();
     expect(Array.isArray(response.body.data.exercises)).toBeTruthy();
   });
 
@@ -126,11 +123,11 @@ describe("Workout", () => {
 
     expect(Array.isArray(response.body.data.workouts)).toBeTruthy();
     expect(
-      Array.isArray(response.body.data.workouts[0].exercises)
+      Array.isArray(response.body.data.workouts[0].exercises),
     ).toBeTruthy();
   });
 
-  test.only("should return an empty array is no workouts in the database", async () => {
+  test("should return an empty array is no workouts in the database", async () => {
     const response = await request.get("/api/workout").set("Cookie", [cookies]);
 
     expect(Array.isArray(response.body.data.workouts)).toBeTruthy();

@@ -10,7 +10,7 @@ import connectRedis from "connect-redis";
 import csurf from "csurf";
 import cookieParser from "cookie-parser";
 import workoutRouter from "./resources/workout/workout.router";
-import * as middlewares from "./middlewares";
+import * as middlewares from "./lib/middlewares";
 import * as authControllers from "./auth.controllers";
 import baseConfig from "./config/index";
 
